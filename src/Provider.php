@@ -58,7 +58,7 @@ class Provider extends AbstractProvider
      */
     protected function mapUserToObject(array $user)
     {
-        return (new User())->setRaw($user)->map([
+        $lavish = [
             'name' => $user['display_name'],
             'email' => $user['email'],
             'is_admin' => $user['is_admin'],
@@ -67,8 +67,11 @@ class Provider extends AbstractProvider
             'account_status' => $user['account_status'],
             'has_isboxer_beta' => $user['has_isboxer_beta'],
             'has_isboxer2_beta' => $user['has_isboxer2_beta'],
-            'subscription_expires' => $user['subscription_expires'],
-        ]);
+        ];
+        if ($user['is_subscriber'] == '1') {
+            $lavish['subscription_expires'] = $user['subscription_expires'];
+        }
+        return (new User())->setRaw($user)->map($lavish);
     }
 
     /**
